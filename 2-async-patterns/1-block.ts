@@ -1,4 +1,5 @@
 // import http from "http"
+export {};
 const http = require("http");
 
 const server = http.createServer((req: any, res: any) => {
