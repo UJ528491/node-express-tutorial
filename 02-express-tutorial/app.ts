@@ -1,18 +1,23 @@
-// const express = require("express");
-import express from "express";
-import path from "path";
-const app = express();
+import Express from "express";
+const { products, people } = require("./data");
 
-app.use(express.static("./public"));
+const app = Express();
 
 app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./navbar-app/index.html"));
+  res.send("<h1>Home Page</h1><a href='/api/products'>products</a>");
+  // res.json(products);
 });
 
-app.all("*", (req, res) => {
-  res.status(404).send("resource not found");
+app.get("/api/products", (req, res) => {
+  const newProducts: [] = products.map(
+    (product: { id: string; name: string; image: string }) => {
+      const { id, name, image } = product;
+      return { id, name, image };
+    }
+  );
+  res.json(newProducts);
 });
 
 app.listen(5000, () => {
-  console.log("server is listening on port 5000...");
+  console.log(`server is listening "http://localhost:5000"`);
 });
