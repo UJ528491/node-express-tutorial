@@ -26,13 +26,38 @@ app.get("/api/products", (req, res) => {
 app.get("/api/products/:productID", (req, res) => {
   // console.log(req.params);
   const { productID } = req.params;
-  const singleProduct: [] = products.find((product: products) => {
+  const singleProduct: products = products.find((product: products) => {
     return product?.id === Number(productID);
   });
   if (!singleProduct) {
     return res.status(404).send("Product Does not Exist");
   }
   return res.json(singleProduct);
+});
+
+app.get("/api/products/:productID/reviews/:reviewID", (req, res) => {
+  console.log(req.params);
+  res.send("hello world");
+});
+
+app.get("/api/v1/query", (req, res) => {
+  console.log(req.query);
+  const { search, limit } = req.query;
+  let sortedProducts = [...products];
+  if (search) {
+    sortedProducts = sortedProducts.filter(product => {
+      return product.name.startsWith(search);
+    });
+  }
+  if (limit) {
+    sortedProducts = sortedProducts.slice(0, Number(limit));
+  }
+  if (sortedProducts.length < 1) {
+    // res.status(200).send("no product matched your search");
+    return res.status(200).json({ success: true, data: [] });
+  }
+  res.status(200).json(sortedProducts);
+  res.send("hello world");
 });
 
 app.listen(5000, () => {
