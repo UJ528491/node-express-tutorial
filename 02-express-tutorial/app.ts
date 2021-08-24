@@ -1,28 +1,22 @@
-import Express from "express";
-import { logger } from "./logger";
-import { authorize } from "./authorize";
-import morgan from "morgan";
-const app = Express();
-// req => middleware => res
-// 1. use vs route
-// 2. options - our own / express / third party
+import express from "express";
+const app = express();
+let { people } = require("./data");
 
-// app.use([authorize, logger]);
-// app.use(express.static("./public"));
-app.use(morgan("tiny"));
-app.get("/", (req, res) => {
-  res.send("Home");
+// static  assets
+app.use(express.static("./methods-public"));
+// parse form data
+// urlencoded() : built-in middleware in express
+app.use(express.urlencoded({ extended: false }));
+app.get("/api/people", (req, res) => {
+  res.status(200).json({ success: true, data: people });
 });
-app.get("/about", (req, res) => {
-  res.send("About");
-});
-app.get("/api/products", (req, res) => {
-  res.send("Products");
-});
-app.get("/api/items", [logger, authorize], (req, res) => {
-  console.log(req.user);
 
-  res.send("Items");
+app.post("/login", (req, res) => {
+  const { name } = req.body;
+  if (name) {
+    return res.status(200).send(`Welcome ${name}`);
+  }
+  res.status(401).send("Please Provide Credentials");
 });
 
 app.listen(5000, () => {
