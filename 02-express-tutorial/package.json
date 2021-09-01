@@ -2,7 +2,7 @@
   "name": "2-express-tutorial",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
     "start": "nodemon app.ts"
   },
