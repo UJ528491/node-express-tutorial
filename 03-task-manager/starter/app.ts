@@ -1,4 +1,5 @@
 import express from "express";
+import { router } from "./routes/tasks";
 const app = express();
 
 // routes
@@ -6,6 +7,7 @@ app.get("/hello", (req, res) => {
   res.send("Task Manager App");
 });
 
+app.use("/api/v1/tasks", router);
 // app.get('/api/v1/tasks')       - get all the tasks
 // app.post('/api/v1/tasks')     - create new task
 // app.get('/api/v1/tasks/:id')  - get single tasks
