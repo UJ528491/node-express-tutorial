@@ -2,7 +2,8 @@ export const getAllTasks = (req, res) => {
   res.send("all items from the file");
 };
 export const createTask = (req, res) => {
-  res.send("create task");
+  console.log(req.body);
+  res.json(req.body);
 };
 export const getTask = (req, res) => {
   res.send("get single task");

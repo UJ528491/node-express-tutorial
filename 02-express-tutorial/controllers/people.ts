@@ -4,6 +4,7 @@ export const getPeople = (req, res) => {
 };
 
 export const createPerson = (req, res) => {
+  console.log(req.body);
   const { name } = req.body;
   if (!name) {
     return res
