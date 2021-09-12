@@ -1,3 +1,4 @@
+require("./db/connect");
 import express from "express";
 import { router } from "./routes/tasks";
 

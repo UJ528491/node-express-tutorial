@@ -6,11 +6,11 @@ export const createTask = (req, res) => {
   res.json(req.body);
 };
 export const getTask = (req, res) => {
-  res.send("get single task");
+  res.json({ id: req.params.id });
 };
-export const updateTasks = (req, res) => {
-  res.send("update task");
+export const updateTask = (req, res) => {
+  res.json({ id: req.params.id });
 };
-export const deleteTasks = (req, res) => {
+export const deleteTask = (req, res) => {
   res.send("delete task");
 };
