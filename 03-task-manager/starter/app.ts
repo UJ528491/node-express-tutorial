@@ -5,12 +5,11 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
-// routes
-app.get("/hello", (req, res) => {
-  res.send("Task Manager App");
-});
-
+//middleware
+app.use(express.static("./public"));
 app.use(express.json());
+
+// routes
 app.use("/api/v1/tasks", router);
 // app.get('/api/v1/tasks')       - get all the tasks
 // app.post('/api/v1/tasks')     - create new task
