@@ -3,6 +3,7 @@ import { router } from "./routes/tasks";
 import { connectDB } from "./db/connect";
 import dotenv from "dotenv";
 dotenv.config();
+import { notFound } from "./middleware/not-found";
 const app = express();
 
 //middleware
@@ -11,11 +12,8 @@ app.use(express.json());
 
 // routes
 app.use("/api/v1/tasks", router);
-// app.get('/api/v1/tasks')       - get all the tasks
-// app.post('/api/v1/tasks')     - create new task
-// app.get('/api/v1/tasks/:id')  - get single tasks
-// app.patch('/api/v1/tasks/:id'')   -update tasks
-// app.delete('/api/v1/tasks/:id'')   - delete tasks
+
+app.use(notFound);
 
 const port = 3000;
 const start = async () => {
