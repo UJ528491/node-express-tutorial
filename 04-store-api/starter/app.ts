@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
+require("express-async-errors");
+// import { express-async-errors } from "express-async-errors";
 import express from "express";
 import notFoundMiddleware from "../starter/middleware/not-found";
 import errorHandlerMiddleware from "../starter/middleware/error-handler";
