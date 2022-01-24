@@ -1,13 +1,14 @@
+import { match } from "assert";
 import Product from "../models/product";
 
 const getAllProductsStatic = async (req, res) => {
   // throw new Error("testing acync errors");
   const search = "ab";
   const products = await Product.find({
-    name: { $regex: search, $options: "i" },
+    price: { $gt: 100 },
   })
     .select("name price")
-    .sort("name");
+    .sort("price");
   res.status(200).json({ products, nbHits: products.length });
 };
 
@@ -20,7 +21,7 @@ interface Query {
 }
 
 const getAllProducts = async (req, res) => {
-  const { featured, company, sort, name, fields } = req.query;
+  const { featured, company, sort, name, fields, numericFilters } = req.query;
   const queryObject: Query = {};
   // const queryObject = {};
   if (featured) {
@@ -31,6 +32,28 @@ const getAllProducts = async (req, res) => {
   }
   if (name) {
     queryObject.name = { $regex: name, $options: "i" };
+  }
+  if (numericFilters) {
+    const operatorMap = {
+      ">": "$gt",
+      ">=": "$gte",
+      "=": "$eq",
+      "<=": "$lte",
+      "<": "$lt",
+    };
+    const regEx = /\b(<|>|>=|=|<=|<)\b/g;
+    let filters = numericFilters.replace(
+      regEx,
+      match => `-${operatorMap[match]}-`
+    );
+    const options = ["price", "rating"];
+    filters = filters.split(",").forEach(item => {
+      const [field, operator, value] = item.split("-");
+      if (options.includes(field)) {
+        queryObject[field] = { [operator]: Number(value) };
+      }
+    });
+    console.log(filters);
   }
 
   console.log(queryObject);
