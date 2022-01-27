@@ -5,8 +5,9 @@ const express = require("express");
 const app = express();
 
 import { router as mainRouter } from "./routes/main";
+import { errorHandlerMiddleware } from "./middleware/error-handler";
 const notFoundMiddleware = require("./middleware/not-found");
-const errorHandlerMiddleware = require("./middleware/error-handler");
+// const errorHandlerMiddleware = require("./middleware/error-handler");
 
 // middleware
 app.use(express.static("./public"));
