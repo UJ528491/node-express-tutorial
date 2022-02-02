@@ -9,8 +9,8 @@ import { errorHandlerMiddleware } from "./middleware/error-handler";
 import { router as authRouter } from "./routes/auth";
 import { router as jobsRouter } from "./routes/jobs";
 // connectDB
-import { connectDB } from "../../03-task-manager/starter/db/connect";
-
+import { connectDB } from "./db/connect";
+// import { connectDB } from "../../03-task-manager/starter/db/connect"; my mistake..
 app.use(express.json());
 // extra packages
 
