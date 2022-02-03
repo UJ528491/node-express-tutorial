@@ -5,12 +5,12 @@ BadRequestError;
 import bcrypt from "bcryptjs";
 
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
-  const salt = await bcrypt.genSalt(10);
-  const hashedPw = await bcrypt.hash(password, salt);
-  const tempUser = { name, email, password: hashedPw };
+  // const { name, email, password } = req.body;
+  // const salt = await bcrypt.genSalt(10);
+  // const hashedPw = await bcrypt.hash(password, salt);
+  // const tempUser = { name, email, password: hashedPw };
 
-  const user = await UserModel.create({ ...tempUser });
+  const user = await UserModel.create({ ...req.body });
   res.status(StatusCodes.CREATED).json(user);
 };
 
