@@ -26,6 +26,13 @@ export const errorHandlerMiddleware = (err, req, res, next) => {
     )} field, please choose another value`;
     customError.statusCode = StatusCodes.BAD_REQUEST;
   }
+
+  // cast error
+  if (err.name === "CastError") {
+    customError.statusCode = StatusCodes.BAD_REQUEST;
+    customError.msg = `No items found with id : ${err.value}`;
+  }
+
   // return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err });
   return res.status(customError.statusCode).json({ msg: customError.msg });
 };
