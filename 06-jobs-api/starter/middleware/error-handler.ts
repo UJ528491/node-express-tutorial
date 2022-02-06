@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomAPIError } from "../errors";
+// import { CustomAPIError } from "../errors";
 export const errorHandlerMiddleware = (err, req, res, next) => {
   let customError = {
     // set default
@@ -7,9 +7,19 @@ export const errorHandlerMiddleware = (err, req, res, next) => {
     msg: err.message || "somthing went wrong try again later",
   };
 
-  if (err instanceof CustomAPIError) {
-    return res.status(err.statusCode).json({ msg: err.message });
+  // if (err instanceof CustomAPIError) {
+  //   return res.status(err.statusCode).json({ msg: err.message });
+  // }
+  // validation error
+  if (err.name === "ValidationError") {
+    customError.statusCode = StatusCodes.BAD_REQUEST;
+    customError.msg = Object.values(err.errors)
+      .map((item: any) => item.message)
+      .join(", ");
   }
+  console.log(customError.msg);
+
+  // duplicate value error
   if (err.code && err.code === 11000) {
     customError.msg = `Duplicated value entered for ${Object.keys(
       err.keyValue
