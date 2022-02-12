@@ -7,5 +7,5 @@ import uploadProductImage from "../controllers/uploadsController";
 
 export const router = express.Router();
 
-router.route(".").post(createProduct).get(getAllProducts);
+router.route("/").post(createProduct).get(getAllProducts);
 router.route("/uploads").post(uploadProductImage);
