@@ -3,14 +3,12 @@ import { StatusCodes } from "http-status-codes";
 import { NotFoundError } from "../errors";
 
 const createProduct = async (req, res) => {
-  console.log(req.body);
   const product = await Product.create(req.body);
   res.status(StatusCodes.CREATED).json({ product });
 };
 const getAllProducts = async (req, res) => {
   const products = await Product.find().sort("createdAt");
   res.status(StatusCodes.OK).json({ products, count: products.length });
-  res.send("get all products");
 };
 const deleteProduct = async (req, res) => {
   const {
