@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import path from "path";
 import { CustomAPIError, BadRequestError } from "../errors";
 import cloudinary from "cloudinary";
+import fs from "fs";
 
 const uploadProductImageLocal = async (req, res) => {
   // check if file exists
@@ -40,6 +41,7 @@ const uploadProductImageCloudinary = async (req, res) => {
       folder: "file-upload",
     }
   );
+  fs.unlinkSync(req.files.image.tempFilePath);
   return res.status(StatusCodes.OK).json({ image: { src: result.secure_url } });
 };
 
