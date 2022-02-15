@@ -3,7 +3,15 @@ require("express-async-errors");
 
 const express = require("express");
 const app = express();
+
 import fileUpload from "express-fileupload";
+// cloudinary
+import cloudinary from "cloudinary";
+cloudinary.v2.config({
+  cloud_name: process.env.Cloud_Name,
+  api_key: process.env.API_Key,
+  api_secret: process.env.API_Secret,
+});
 
 // database
 import connectDB from "./db/connect";
