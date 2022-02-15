@@ -9,8 +9,8 @@ import fileUpload from "express-fileupload";
 import cloudinary from "cloudinary";
 cloudinary.v2.config({
   cloud_name: process.env.Cloud_Name,
-  api_key: process.env.API_Key,
-  api_secret: process.env.API_Secret,
+  api_key: process.env.Cloud_API_Key,
+  api_secret: process.env.Cloud_API_Secret,
 });
 
 // database
@@ -25,7 +25,7 @@ import errorHandlerMiddleware from "./middleware/error-handler";
 
 app.use(express.static("./public"));
 app.use(express.json());
-app.use(fileUpload());
+app.use(fileUpload({ useTempFiles: true }));
 
 app.get("/", (req, res) => {
   res.send("<h1>File Upload Starter</h1>");

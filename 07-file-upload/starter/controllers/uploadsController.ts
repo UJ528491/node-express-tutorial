@@ -1,8 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import path from "path";
 import { CustomAPIError, BadRequestError } from "../errors";
+import cloudinary from "cloudinary";
 
-const uploadProductImage = async (req, res) => {
+const uploadProductImageLocal = async (req, res) => {
   // check if file exists
   // check format
   // check size
@@ -30,4 +31,16 @@ const uploadProductImage = async (req, res) => {
     .status(StatusCodes.OK)
     .json({ image: { src: `/uploads/${productImage.name}` } });
 };
-export default uploadProductImage;
+
+const uploadProductImageCloudinary = async (req, res) => {
+  const result = await cloudinary.v2.uploader.upload(
+    req.files.image.tempFilePath,
+    {
+      use_filename: true,
+      folder: "file-upload",
+    }
+  );
+  return res.status(StatusCodes.OK).json({ image: { src: result.secure_url } });
+};
+
+export default uploadProductImageCloudinary;
