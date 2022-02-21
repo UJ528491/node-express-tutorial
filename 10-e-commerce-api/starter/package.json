@@ -2,9 +2,9 @@
   "name": "06-jobs-api",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.ts"
   },
   "author": "",
   "license": "ISC",
