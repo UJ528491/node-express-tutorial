@@ -47,4 +47,4 @@ const authorizeRoles = (...roles: any) => {
   };
 };
 
-module.exports = { authenticateUser, authorizeRoles };
+export { authenticateUser, authorizeRoles };
