@@ -18,10 +18,10 @@
 
 #### Basic Routes and Middleware
 
-- [] setup / GET Route
-- [] setup express.json() middleware
-- [] setup 404 and errorHandler middleware
-- [] import 'exress-async-errors' package
+- [x] setup / GET Route
+- [x] setup express.json() middleware
+- [x] setup 404 and errorHandler middleware
+- [x] import 'exress-async-errors' package
 
 #### 404 vs ErrorHandler Middleware
 
@@ -31,9 +31,9 @@
 
 #### User Model
 
-- [] create models folder and User.js file
-- [] create schema with name,email, password (all type:String)
-- [] export mongoose model
+- [x] create models folder and User.js file
+- [x] create schema with name,email, password (all type:String)
+- [x] export mongoose model
 
 #### Validator Package
 

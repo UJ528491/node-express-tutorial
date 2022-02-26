@@ -8,6 +8,8 @@ import notFoundMiddleware from "./middleware/not-found";
 import errorHandlerMiddleware from "./middleware/error-handler";
 // rest of packages
 import morgan from "morgan";
+// routers
+import authRoutes from "./routes/authRoutes";
 
 // express
 const app = express();
@@ -17,6 +19,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("e-commerce-api");
 });
+
+app.use("/api/v1/auth", authRoutes);
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
