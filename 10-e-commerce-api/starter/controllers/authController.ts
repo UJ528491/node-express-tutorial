@@ -4,12 +4,16 @@ import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors";
 
 const register = async (req: any, res: express.Response) => {
-  const { email } = req.body;
+  const { email, name, password } = req.body;
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
     throw new CustomError.BadRequestError("Email already exists");
   }
-  const user = await User.create(req.body);
+  // first registered user is an admin
+  const isFirstUser = (await User.countDocuments({})) === 0;
+  const role = isFirstUser ? "admin" : "user";
+
+  const user = await User.create({ email, name, password, role });
   res.status(StatusCodes.CREATED).json(user);
 };
 const login = async (req: any, res: express.Response) => {
