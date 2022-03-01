@@ -1,5 +1,6 @@
 import express from "express";
 import StatusCodes from "http-status-codes";
+
 const errorHandlerMiddleware = (
   err: any,
   req: any,

@@ -2,6 +2,7 @@ import express from "express";
 import User from "../models/User";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors";
+import { createJWT } from "../utils";
 
 const register = async (req: any, res: express.Response) => {
   const { email, name, password } = req.body;
@@ -14,7 +15,11 @@ const register = async (req: any, res: express.Response) => {
   const role = isFirstUser ? "admin" : "user";
 
   const user = await User.create({ email, name, password, role });
-  res.status(StatusCodes.CREATED).json(user);
+
+  const tokenUser = { name: user.name, email: user.email, role: user.role };
+  const token = createJWT({ payload: tokenUser });
+
+  res.status(StatusCodes.CREATED).json({ user: tokenUser, token });
 };
 const login = async (req: any, res: express.Response) => {
   res.send("login user");
