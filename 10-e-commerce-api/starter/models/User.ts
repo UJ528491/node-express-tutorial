@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bycript from "bcryptjs";
+
+interface UserSchema {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -29,5 +37,17 @@ const UserSchema = new mongoose.Schema({
     default: "user",
   },
 });
+
+UserSchema.pre("save", async function () {
+  const salt = await bycript.genSalt(10);
+  this.password = await bycript.hash(this.password, salt);
+});
+
+UserSchema.methods.comparePassword = async function (
+  password: UserSchema["password"]
+) {
+  const isMatch = await bycript.compare(password, this.password);
+  return isMatch;
+};
 
 export default mongoose.model("User", UserSchema);
