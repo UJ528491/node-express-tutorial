@@ -2,7 +2,7 @@ import express from "express";
 import User from "../models/User";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors";
-import { createJWT } from "../utils";
+import { attachCookiesToResponse } from "../utils";
 
 const register = async (req: any, res: express.Response) => {
   const { email, name, password } = req.body;
@@ -16,18 +16,12 @@ const register = async (req: any, res: express.Response) => {
 
   const user = await User.create({ email, name, password, role });
 
-  const tokenUser = { name: user.name, email: user.email, role: user.role };
-  const token = createJWT({ payload: tokenUser });
-
-  const oneDay = 1000 * 60 * 60 * 24;
-
-  res.cookie("token", token, {
-    httpOnly: true,
-    expires: new Date(Date.now() + oneDay),
-  });
+  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
+
 const login = async (req: any, res: express.Response) => {
   res.send("login user");
 };
