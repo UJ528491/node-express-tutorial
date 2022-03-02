@@ -19,7 +19,14 @@ const register = async (req: any, res: express.Response) => {
   const tokenUser = { name: user.name, email: user.email, role: user.role };
   const token = createJWT({ payload: tokenUser });
 
-  res.status(StatusCodes.CREATED).json({ user: tokenUser, token });
+  const oneDay = 1000 * 60 * 60 * 24;
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + oneDay),
+  });
+
+  res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
 const login = async (req: any, res: express.Response) => {
   res.send("login user");

@@ -1,3 +1,4 @@
+// express
 import express from "express";
 require("express-async-errors");
 require("dotenv").config();
@@ -10,13 +11,21 @@ import errorHandlerMiddleware from "./middleware/error-handler";
 import morgan from "morgan";
 // routers
 import authRoutes from "./routes/authRoutes";
+// cookie-parser
+import cookieParser from "cookie-parser";
 
-// express
 const app = express();
 
 app.use(morgan("tiny"));
 app.use(express.json());
+app.use(cookieParser());
+
 app.get("/", (req, res) => {
+  res.send("e-commerce-api");
+});
+
+app.get("/api/v1", (req, res) => {
+  console.log(req.cookies);
   res.send("e-commerce-api");
 });
 
