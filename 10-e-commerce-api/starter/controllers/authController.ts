@@ -23,7 +23,22 @@ const register = async (req: any, res: express.Response) => {
 };
 
 const login = async (req: any, res: express.Response) => {
-  res.send("login user");
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new CustomError.BadRequestError("Email and password are required");
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new CustomError.UnauthenticatedError("Invalid credentials");
+  }
+  // compare password with hash
+  const isPasswordValid = await user.comparePassword(password);
+  if (!isPasswordValid) {
+    throw new CustomError.UnauthenticatedError("Invalid password");
+  }
+  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  attachCookiesToResponse({ res, user: tokenUser });
+  res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 const logout = async (req: any, res: express.Response) => {
   res.send("logout user");
