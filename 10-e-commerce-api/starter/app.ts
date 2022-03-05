@@ -11,6 +11,7 @@ import errorHandlerMiddleware from "./middleware/error-handler";
 import morgan from "morgan";
 // routers
 import authRoutes from "./routes/authRoutes";
+import userRoutes from "./routes/userRoutes";
 // cookie-parser
 import cookieParser from "cookie-parser";
 
@@ -31,6 +32,7 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
