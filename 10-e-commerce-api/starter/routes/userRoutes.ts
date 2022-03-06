@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.get("/", getAllUsers);
 router.get("/showme", showCurrentUser);
-router.post("/updateUser", updateUser);
-router.post("/updateUserPassword", updateUserPassword);
+router.patch("/updateUser", updateUser);
+router.patch("/updateUserPassword", updateUserPassword);
 router.get("/:id", getSingleUser);
 
 export default router;
