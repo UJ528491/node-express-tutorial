@@ -4,6 +4,8 @@ import StatusCodes from "http-status-codes";
 import CustomError from "../errors";
 
 const getAllUsers = async (req: any, res: express.Response) => {
+  console.log(req.user);
+
   const users = await User.find({ role: "user" }).select("-password");
   if (!users) {
     throw new CustomError.NotFoundError("No users found");

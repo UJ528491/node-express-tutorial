@@ -1,5 +1,11 @@
 import jwt from "jsonwebtoken";
 
+interface tokenUser {
+  name: string;
+  userId: string;
+  role: string;
+}
+
 const createJWT = ({ payload }: any) => {
   const secret = process.env.JWT_SECRET;
   if (secret) {
@@ -10,10 +16,10 @@ const createJWT = ({ payload }: any) => {
   }
 };
 
-const isTokenValid = (token: string) => {
+const isTokenValid = ({ token }: any): any => {
   const secret = process.env.JWT_SECRET;
   if (secret) {
-    jwt.verify(token, secret);
+    return jwt.verify(token, secret);
   }
 };
 
