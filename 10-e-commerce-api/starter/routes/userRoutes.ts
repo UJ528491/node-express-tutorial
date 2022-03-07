@@ -1,4 +1,5 @@
 import express from "express";
+import authenticateUser from "../middleware/authentication";
 import {
   getAllUsers,
   getSingleUser,
@@ -8,7 +9,7 @@ import {
 } from "../controllers/userController";
 const router = express.Router();
 
-router.get("/", getAllUsers);
+router.get("/", authenticateUser, getAllUsers);
 router.get("/showme", showCurrentUser);
 router.patch("/updateUser", updateUser);
 router.patch("/updateUserPassword", updateUserPassword);
