@@ -20,15 +20,26 @@ const authenticateUser = async (
   }
 };
 
-const authorizePermissions = (
-  req: any,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  if (req.user.role !== "admin") {
-    throw new CustomError.UnauthorizedError("You are not authorized");
-  }
-  next();
+const authorizePermissions = (...roles: string[]) => {
+  return (req: any, res: express.Response, next: express.NextFunction) => {
+    if (!roles.includes(req.user.role)) {
+      throw new CustomError.UnauthorizedError(
+        "You are not authorized to perform this action"
+      );
+    }
+    next();
+  };
 };
+
+// const authorizePermissions = (
+//   req: any,
+//   res: express.Response,
+//   next: express.NextFunction
+// ) => {
+//   if (req.user.role !== "admin") {
+//     throw new CustomError.UnauthorizedError("You are not authorized");
+//   }
+//   next();
+// };
 
 export { authenticateUser, authorizePermissions };
