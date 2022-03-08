@@ -20,4 +20,15 @@ const authenticateUser = async (
   }
 };
 
-export default authenticateUser;
+const authorizePermissions = (
+  req: any,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  if (req.user.role !== "admin") {
+    throw new CustomError.UnauthorizedError("You are not authorized");
+  }
+  next();
+};
+
+export { authenticateUser, authorizePermissions };
