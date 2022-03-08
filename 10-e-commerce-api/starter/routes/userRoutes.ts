@@ -12,13 +12,8 @@ import {
 } from "../controllers/userController";
 const router = express.Router();
 
-router.get(
-  "/",
-  authenticateUser,
-  authorizePermissions("admin", "owner"),
-  getAllUsers
-);
-router.get("/showme", showCurrentUser);
+router.get("/", authenticateUser, authorizePermissions("admin"), getAllUsers);
+router.get("/showme", authenticateUser, showCurrentUser);
 router.patch("/updateUser", updateUser);
 router.patch("/updateUserPassword", updateUserPassword);
 router.get("/:id", authenticateUser, getSingleUser);
