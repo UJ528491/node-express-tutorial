@@ -45,20 +45,37 @@ const updateUserPassword = async (req: any, res: express.Response) => {
   res.status(StatusCodes.OK).json({ msg: "Password updated successfully" });
 };
 
+// upadateUser with user.save()
 const updateUser = async (req: any, res: express.Response) => {
   const { name, email } = req.body;
   if (!name || !email) {
     throw new CustomError.BadRequestError("Name and email are required");
   }
-  const user = await User.findOneAndUpdate(
-    { _id: req.user.userId },
-    { email, name },
-    { new: true, runValidators: true }
-  );
+  const user = await User.findOne({ _id: req.user.userId });
+  user.name = name;
+  user.email = email;
+  await user.save();
+
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
+
+// updateUser with findOneAndUpdate
+// const updateUser = async (req: any, res: express.Response) => {
+//   const { name, email } = req.body;
+//   if (!name || !email) {
+//     throw new CustomError.BadRequestError("Name and email are required");
+//   }
+//   const user = await User.findOneAndUpdate(
+//     { _id: req.user.userId },
+//     { email, name },
+//     { new: true, runValidators: true }
+//   );
+//   const tokenUser = createTokenUser(user);
+//   attachCookiesToResponse({ res, user: tokenUser });
+//   res.status(StatusCodes.OK).json({ user: tokenUser });
+// };
 
 export {
   getAllUsers,

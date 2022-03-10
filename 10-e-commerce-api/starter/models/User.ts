@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide password"],
     minlength: 6,
-    maxlength: 12,
+    // maxlength: 12,
   },
   role: {
     type: String,
@@ -39,6 +39,8 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  console.log("pre save");
   const salt = await bycript.genSalt(10);
   this.password = await bycript.hash(this.password, salt);
 });
