@@ -2,6 +2,7 @@ import express from "express";
 import User from "../models/User";
 import StatusCodes from "http-status-codes";
 import CustomError from "../errors";
+import { attachCookiesToResponse, createTokenUser } from "../utils";
 
 const getAllUsers = async (req: any, res: express.Response) => {
   console.log(req.user);
@@ -45,7 +46,18 @@ const updateUserPassword = async (req: any, res: express.Response) => {
 };
 
 const updateUser = async (req: any, res: express.Response) => {
-  res.json({ message: "update user", body: req.body });
+  const { name, email } = req.body;
+  if (!name || !email) {
+    throw new CustomError.BadRequestError("Name and email are required");
+  }
+  const user = await User.findOneAndUpdate(
+    { _id: req.user.userId },
+    { email, name },
+    { new: true, runValidators: true }
+  );
+  const tokenUser = createTokenUser(user);
+  attachCookiesToResponse({ res, user: tokenUser });
+  res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
 export {

@@ -40,6 +40,7 @@ const login = async (req: any, res: express.Response) => {
   attachCookiesToResponse({ res, user: tokenUser });
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
+
 const logout = async (req: any, res: express.Response) => {
   const fiveSeconds = 1000 * 5;
   res.cookie("token", "logout", {
