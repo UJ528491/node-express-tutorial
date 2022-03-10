@@ -2,7 +2,7 @@ import express from "express";
 import User from "../models/User";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors";
-import { attachCookiesToResponse } from "../utils";
+import { attachCookiesToResponse, createTokenUser } from "../utils";
 
 const register = async (req: any, res: express.Response) => {
   const { email, name, password } = req.body;
@@ -16,7 +16,7 @@ const register = async (req: any, res: express.Response) => {
 
   const user = await User.create({ email, name, password, role });
 
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(StatusCodes.CREATED).json({ user: tokenUser });
@@ -36,7 +36,7 @@ const login = async (req: any, res: express.Response) => {
   if (!isPasswordValid) {
     throw new CustomError.UnauthenticatedError("Invalid password");
   }
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
