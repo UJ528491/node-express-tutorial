@@ -2,7 +2,11 @@ import express from "express";
 import User from "../models/User";
 import StatusCodes from "http-status-codes";
 import CustomError from "../errors";
-import { attachCookiesToResponse, createTokenUser } from "../utils";
+import {
+  attachCookiesToResponse,
+  checkPermissions,
+  createTokenUser,
+} from "../utils";
 
 const getAllUsers = async (req: any, res: express.Response) => {
   console.log(req.user);
@@ -21,6 +25,7 @@ const getSingleUser = async (req: any, res: express.Response) => {
       `User not found with id : ${req.params.id}`
     );
   }
+  checkPermissions(req.user, user.id);
   res.status(StatusCodes.OK).send({ user });
 };
 
