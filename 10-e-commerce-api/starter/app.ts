@@ -12,6 +12,7 @@ import morgan from "morgan";
 // routers
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
+import productRoutes from "./routes/productRoutes";
 // cookie-parser
 import cookieParser from "cookie-parser";
 
@@ -33,6 +34,7 @@ app.get("/api/v1", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/products", productRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
