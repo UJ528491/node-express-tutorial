@@ -18,7 +18,10 @@ const ProductSchema = new mongoose.Schema(
       required: [true, "Please provide product description"],
       maxlength: [1000, "Product name must be less than 1000 characters"],
     },
-    image: { type: String, default: "/uploads/example.jpeg" },
+    image: {
+      type: String,
+      default: "/uploads/example.jpeg",
+    },
     category: {
       type: String,
       required: [true, "Please provide product category"],
@@ -34,6 +37,7 @@ const ProductSchema = new mongoose.Schema(
     },
     colors: {
       type: [String],
+      default: ["#222"],
       required: true,
     },
     featured: {
