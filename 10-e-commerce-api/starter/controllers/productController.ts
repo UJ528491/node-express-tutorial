@@ -18,19 +18,34 @@ const createProduct = async (req: any, res: express.Response) => {
 };
 
 const getAllProducts = async (req: any, res: express.Response) => {
-  res.json({ message: "get all products" });
+  const product = await Product.find();
+  res.status(StatusCodes.OK).json({ product });
 };
 
 const getSingleProduct = async (req: any, res: express.Response) => {
-  res.json({ message: "get single product" });
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    throw new CustomError.NotFoundError("Product not found");
+  }
+  res.status(StatusCodes.OK).json({ product });
 };
 
 const updateProduct = async (req: any, res: express.Response) => {
-  res.json({ message: "update product" });
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!product) {
+    throw new CustomError.NotFoundError("Product not found");
+  }
+  res.status(StatusCodes.OK).json({ product });
 };
 
 const deleteProduct = async (req: any, res: express.Response) => {
-  res.json({ message: "delete product" });
+  const product = await Product.findByIdAndDelete(req.params.id);
+  if (!product) {
+    throw new CustomError.NotFoundError("Product not found");
+  }
+  res.status(StatusCodes.OK).json({ msg: "Product deleted" });
 };
 
 const uploadImage = async (req: any, res: express.Response) => {
