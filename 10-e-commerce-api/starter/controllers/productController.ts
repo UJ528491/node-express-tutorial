@@ -2,6 +2,7 @@ import express from "express";
 import Product from "../models/Product";
 import StatusCodes from "http-status-codes";
 import CustomError from "../errors";
+import path from "path";
 
 const createProduct = async (req: any, res: express.Response) => {
   const { name, price, description, image, company, category } = req.body;
@@ -49,7 +50,27 @@ const deleteProduct = async (req: any, res: express.Response) => {
 };
 
 const uploadImage = async (req: any, res: express.Response) => {
-  res.json({ message: "upload image" });
+  console.log(req.files);
+  if (!req.files) {
+    throw new CustomError.BadRequestError("No file uploaded");
+  }
+  const productImage = req.files.image;
+  if (!productImage.mimetype.startsWith("image/")) {
+    throw new CustomError.BadRequestError("Only images allowed");
+  }
+  const maxSize = 1024 * 1024;
+  if (productImage.size > maxSize) {
+    throw new CustomError.BadRequestError(
+      "Please upload an image smaller than 1mb"
+    );
+  }
+
+  const imagePath = path.join(
+    __dirname,
+    "../public/uploads/" + `${productImage.name}`
+  );
+  await productImage.mv(imagePath);
+  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
 
 export {

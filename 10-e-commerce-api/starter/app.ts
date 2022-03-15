@@ -15,12 +15,17 @@ import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 // cookie-parser
 import cookieParser from "cookie-parser";
+// image upload
+import fileUpload from "express-fileupload";
 
 const app = express();
 
 app.use(morgan("tiny"));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+
+app.use(express.static("./public"));
+app.use(fileUpload({ useTempFiles: true }));
 
 app.get("/", (req, res) => {
   res.send("e-commerce-api");
