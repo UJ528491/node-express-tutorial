@@ -13,6 +13,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
+import reviewRoutes from "./routes/reviewRoutes";
 // cookie-parser
 import cookieParser from "cookie-parser";
 // image upload
@@ -40,6 +41,7 @@ app.get("/api/v1", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/reivews", reviewRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
