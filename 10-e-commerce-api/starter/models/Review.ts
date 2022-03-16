@@ -32,7 +32,7 @@ const ReviewSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+// only 1 review per prodcuct per user
 ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
 export default mongoose.model("Review", ReviewSchema);
