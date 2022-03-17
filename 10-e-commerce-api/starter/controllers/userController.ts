@@ -25,6 +25,8 @@ const getSingleUser = async (req: any, res: express.Response) => {
       `User not found with id : ${req.params.id}`
     );
   }
+  console.log(req.user, user.id);
+
   checkPermissions(req.user, user.id);
   res.status(StatusCodes.OK).send({ user });
 };

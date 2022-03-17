@@ -1,7 +1,8 @@
 import express from "express";
 import Review from "../models/Review";
-import StatusCodes from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors";
+import checkPermissions from "../utils/checkPermissions";
 
 const createReview = async (req: any, res: express.Response) => {
   const { rating, title, comment, product } = req.body;
@@ -50,24 +51,38 @@ const getSingleReview = async (req: any, res: express.Response) => {
 };
 
 const updateReview = async (req: any, res: express.Response) => {
-  const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
+  const { rating, title, comment } = req.body;
+  const { id: reviewId } = req.params;
+  const review = await Review.findOne({
+    _id: reviewId,
   });
   if (!review) {
     throw new CustomError.NotFoundError(
-      `No review found with id : ${req.params.id}`
+      `No review found with id : ${reviewId}`
     );
   }
+  checkPermissions(req.user, review.user);
+  // await review.updateOne(req.body);
+  review.rating = rating;
+  review.title = title;
+  review.comment = comment;
+  await review.save();
+
   res.status(StatusCodes.OK).json({ review });
 };
 
 const deleteReview = async (req: any, res: express.Response) => {
-  const review = await Review.findByIdAndDelete(req.params.id);
+  const { id: reviewId } = req.params.id;
+  const review = await Review.findOne({
+    _id: reviewId,
+  });
   if (!review) {
     throw new CustomError.NotFoundError(
-      `No review found with id : ${req.params.id}`
+      `No review found with id : ${reviewId}`
     );
   }
+  checkPermissions(req.user, review.user);
+  await review.remove();
   res.status(StatusCodes.OK).json({ msg: "Review deleted" });
 };
 
