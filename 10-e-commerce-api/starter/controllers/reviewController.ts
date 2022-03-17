@@ -50,11 +50,25 @@ const getSingleReview = async (req: any, res: express.Response) => {
 };
 
 const updateReview = async (req: any, res: express.Response) => {
-  res.send("updateReview");
+  const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!review) {
+    throw new CustomError.NotFoundError(
+      `No review found with id : ${req.params.id}`
+    );
+  }
+  res.status(StatusCodes.OK).json({ review });
 };
 
 const deleteReview = async (req: any, res: express.Response) => {
-  res.send("deleteReview");
+  const review = await Review.findByIdAndDelete(req.params.id);
+  if (!review) {
+    throw new CustomError.NotFoundError(
+      `No review found with id : ${req.params.id}`
+    );
+  }
+  res.status(StatusCodes.OK).json({ msg: "Review deleted" });
 };
 
 export {
