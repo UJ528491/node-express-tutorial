@@ -32,11 +32,21 @@ const createReview = async (req: any, res: express.Response) => {
 };
 
 const getAllReviews = async (req: any, res: express.Response) => {
-  res.send("getAllReviews");
+  const reviews = await Review.find();
+  if (!reviews) {
+    throw new CustomError.NotFoundError(`No reviews found`);
+  }
+  res.status(StatusCodes.OK).json({ reviews });
 };
 
 const getSingleReview = async (req: any, res: express.Response) => {
-  res.send("getSingleReview");
+  const review = await Review.findById(req.params.id);
+  if (!review) {
+    throw new CustomError.NotFoundError(
+      `No review found with id : ${req.params.id}`
+    );
+  }
+  res.status(StatusCodes.OK).json({ review });
 };
 
 const updateReview = async (req: any, res: express.Response) => {
