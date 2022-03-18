@@ -33,7 +33,15 @@ const createReview = async (req: any, res: express.Response) => {
 };
 
 const getAllReviews = async (req: any, res: express.Response) => {
-  const reviews = await Review.find();
+  const reviews = await Review.find()
+    .populate({
+      path: "product",
+      select: "name company price",
+    })
+    .populate({
+      path: "user",
+      select: "name",
+    });
   if (!reviews) {
     throw new CustomError.NotFoundError(`No reviews found`);
   }
