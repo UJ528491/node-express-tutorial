@@ -11,6 +11,7 @@ import {
   deleteProduct,
   uploadImage,
 } from "../controllers/productController";
+import { getReviewsBySingleProduct } from "../controllers/reviewController";
 const router = express.Router();
 
 router
@@ -27,5 +28,7 @@ router
   .get(getSingleProduct)
   .patch([authenticateUser, authorizePermissions("admin")], updateProduct)
   .delete([authenticateUser, authorizePermissions("admin")], deleteProduct);
+
+router.route("/:id/reviews").get(getReviewsBySingleProduct);
 
 export default router;

@@ -49,7 +49,8 @@ const getAllReviews = async (req: any, res: express.Response) => {
 };
 
 const getSingleReview = async (req: any, res: express.Response) => {
-  const review = await Review.findById(req.params.id);
+  const { id: reviewId } = req.params;
+  const review = await Review.findById(reviewId);
   if (!review) {
     throw new CustomError.NotFoundError(
       `No review found with id : ${req.params.id}`
@@ -94,10 +95,17 @@ const deleteReview = async (req: any, res: express.Response) => {
   res.status(StatusCodes.OK).json({ msg: "Review deleted" });
 };
 
+const getReviewsBySingleProduct = async (req: any, res: express.Response) => {
+  const { id: productId } = req.params;
+  const reviews = await Review.find({ product: productId });
+  res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
+};
+
 export {
   createReview,
   getAllReviews,
   getSingleReview,
   updateReview,
   deleteReview,
+  getReviewsBySingleProduct,
 };
