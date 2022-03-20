@@ -81,7 +81,7 @@ const updateReview = async (req: any, res: express.Response) => {
 };
 
 const deleteReview = async (req: any, res: express.Response) => {
-  const { id: reviewId } = req.params.id;
+  const { id: reviewId } = req.params;
   const review = await Review.findOne({
     _id: reviewId,
   });
