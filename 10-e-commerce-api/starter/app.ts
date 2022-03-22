@@ -14,6 +14,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 import reviewRoutes from "./routes/reviewRoutes";
+import orderRoutes from "./routes/orderRoutes";
 // cookie-parser
 import cookieParser from "cookie-parser";
 // image upload
@@ -42,6 +43,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
