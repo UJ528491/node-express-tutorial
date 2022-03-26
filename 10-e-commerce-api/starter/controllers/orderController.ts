@@ -1,8 +1,14 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors";
+import Order from "../models/order";
 import Product from "../models/Product";
 import checkPermissions from "../utils/checkPermissions";
+
+const fakeStripeAPI = async ({ data, currency }: any) => {
+  const client_secret = "someRandomString";
+  return { client_secret };
+};
 
 const createOrder = async (req: any, res: express.Response) => {
   const { items: cartItems, tax, shippingFee } = req.body;
@@ -34,8 +40,25 @@ const createOrder = async (req: any, res: express.Response) => {
     // calculate subtotal
     subtotal += item.amount * price;
   }
+  // calculate total
+  const total = tax + shippingFee + subtotal;
+  // get client secret
+  const paymentIntent = await fakeStripeAPI({
+    amount: total,
+    currency: "usd",
+  });
 
-  res.send("create order");
+  const order = await Order.create({
+    orderItems,
+    total,
+    subtotal,
+    tax,
+    shippingFee,
+    clientSecret: paymentIntent.client_secret,
+  });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ order, clientSecret: order.client_secret });
 };
 const getAllOrders = async (req: any, res: express.Response) => {
   res.send("get all orders");
