@@ -19,8 +19,26 @@ import orderRoutes from "./routes/orderRoutes";
 import cookieParser from "cookie-parser";
 // image upload
 import fileUpload from "express-fileupload";
+// security packages
+import helmet from "helmet";
+import cors from "cors";
+const xss = require("xss-clean");
+import mongoSanitize from "express-mongo-sanitize";
+const rateLimiter = require("express-rate-limit");
 
 const app = express();
+
+app.set("trust proxy", 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 60,
+  })
+);
+app.use(helmet());
+app.use(cors());
+app.use(xss());
+app.use(mongoSanitize());
 
 app.use(morgan("tiny"));
 app.use(express.json());

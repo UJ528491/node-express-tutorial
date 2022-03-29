@@ -55,6 +55,7 @@ const createOrder = async (req: any, res: express.Response) => {
     tax,
     shippingFee,
     clientSecret: paymentIntent.client_secret,
+    user: req.user.userId,
   });
   res
     .status(StatusCodes.CREATED)
