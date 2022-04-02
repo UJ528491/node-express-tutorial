@@ -27,7 +27,7 @@ const register = async (req, res) => {
   // send verification token back only while testing in postman!!
   res.status(StatusCodes.CREATED).json({
     msg: "Success! Please check your email for verification token",
-    verificationToken: user,
+    verificationToken: user.verificationToken,
   });
 
   // const tokenUser = createTokenUser(user);
@@ -48,6 +48,9 @@ const login = async (req, res) => {
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError("Invalid Credentials");
+  }
+  if (!user.isVerified) {
+    throw new CustomError.UnauthenticatedError("Please verify your email");
   }
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
