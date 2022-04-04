@@ -36,6 +36,16 @@ const register = async (req, res) => {
   // attachCookiesToResponse({ res, user: tokenUser });
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
+
+const verifyEmail = async (req, res) => {
+  const { verificationToken, email } = req.body;
+  const user = await User.findOne({ verificationToken });
+  if (!user) {
+    throw new CustomError.BadRequestError("Invalid verification token");
+  }
+  res.status(StatusCodes.OK).json({ msg: "Email verified successfully" });
+};
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -71,5 +81,6 @@ module.exports = {
   register,
   login,
   logout,
+  verifyEmail,
 };
 
