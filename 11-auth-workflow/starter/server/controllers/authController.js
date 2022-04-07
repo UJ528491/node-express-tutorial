@@ -1,9 +1,12 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const { attachCookiesToResponse, createTokenUser } = require("../utils");
+const {
+  attachCookiesToResponse,
+  createTokenUser,
+  sendVerificationEmail,
+} = require("../utils");
 const crypto = require("crypto");
-const sendEmail = require("../utils/sendResetPasswordEmail");
 
 const register = async (req, res) => {
   const { email, name, password } = req.body;
