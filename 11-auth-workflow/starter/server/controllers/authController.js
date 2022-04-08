@@ -29,7 +29,15 @@ const register = async (req, res) => {
     role,
     verificationToken,
   });
-  await sendEmail();
+
+  const origin = "http://localhost:5000";
+
+  await sendVerificationEmail({
+    name: user.name,
+    email: user.email,
+    verificationToken,
+    origin,
+  });
   // send verification token back only while testing in postman!!
   res.status(StatusCodes.CREATED).json({
     msg: "Success! Please check your email for verification token",
