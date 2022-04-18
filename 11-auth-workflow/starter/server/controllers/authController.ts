@@ -142,4 +142,3 @@ module.exports = {
   logout,
   verifyEmail,
 };
-

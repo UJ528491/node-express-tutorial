@@ -85,4 +85,3 @@
 #### Reset Password Controller
 
 #### Hash Password Token
-

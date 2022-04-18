@@ -49,4 +49,3 @@ module.exports = {
   isTokenValid,
   attachCookiesToResponse,
 };
-

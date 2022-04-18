@@ -1,8 +1,8 @@
 require("dotenv").config();
 require("express-async-errors");
-// express
 
-const express = require("express");
+// express
+import express from "express";
 const app = express();
 // rest of the packages
 const morgan = require("morgan");
@@ -68,4 +68,3 @@ const start = async () => {
 };
 
 start();
-
