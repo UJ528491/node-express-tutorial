@@ -1,5 +1,5 @@
-const nodemailer = require("nodemailer");
-const nodemailerConfig = require("./nodemailerConfig");
+import nodemailer from 'nodemailer';
+import nodemailerConfig from './nodemailerConfig';
 
 const sendEmail = async ({ to, subject, html }) => {
   let testAccount = await nodemailer.createTestAccount();
@@ -13,4 +13,4 @@ const sendEmail = async ({ to, subject, html }) => {
   });
 };
 
-module.exports = sendEmail;
+export default sendEmail;

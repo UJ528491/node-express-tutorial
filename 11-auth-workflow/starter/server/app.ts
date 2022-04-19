@@ -1,32 +1,37 @@
 require("dotenv").config();
-require("express-async-errors");
+import 'express-async-errors';
 
 // express
-import express from "express";
+import express from 'express';
+
 const app = express();
+
 // rest of the packages
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
-const fileUpload = require("express-fileupload");
-const rateLimiter = require("express-rate-limit");
-const helmet = require("helmet");
-const xss = require("xss-clean");
-const cors = require("cors");
-const mongoSanitize = require("express-mongo-sanitize");
+import morgan from 'morgan';
+
+import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload';
+import rateLimiter from 'express-rate-limit';
+import helmet from 'helmet';
+import xss from 'xss-clean';
+import cors from 'cors';
+import mongoSanitize from 'express-mongo-sanitize';
 
 // database
-const connectDB = require("./db/connect");
+import connectDB from './db/connect';
 
 //  routers
-const authRouter = require("./routes/authRoutes");
-const userRouter = require("./routes/userRoutes");
-const productRouter = require("./routes/productRoutes");
-const reviewRouter = require("./routes/reviewRoutes");
-const orderRouter = require("./routes/orderRoutes");
+import authRouter from './routes/authRoutes';
+
+import userRouter from './routes/userRoutes';
+import productRouter from './routes/productRoutes';
+import reviewRouter from './routes/reviewRoutes';
+import orderRouter from './routes/orderRoutes';
 
 // middleware
-const notFoundMiddleware = require("./middleware/not-found");
-const errorHandlerMiddleware = require("./middleware/error-handler");
+import notFoundMiddleware from './middleware/not-found';
+
+import errorHandlerMiddleware from './middleware/error-handler';
 
 app.set("trust proxy", 1);
 app.use(

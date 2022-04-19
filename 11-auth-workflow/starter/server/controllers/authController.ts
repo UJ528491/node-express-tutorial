@@ -1,13 +1,9 @@
-const User = require("../models/User");
-const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
-const {
-  attachCookiesToResponse,
-  createTokenUser,
-  sendVerificationEmail,
-} = require("../utils");
-const crypto = require("crypto");
-const Token = require("../models/Token");
+import User from '../models/User';
+import { StatusCodes } from 'http-status-codes';
+import CustomError from '../errors';
+import { attachCookiesToResponse, createTokenUser, sendVerificationEmail } from '../utils';
+import crypto from 'crypto';
+import Token from '../models/Token';
 
 const register = async (req, res) => {
   const { email, name, password } = req.body;
@@ -136,7 +132,7 @@ const logout = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
 
-module.exports = {
+export default {
   register,
   login,
   logout,

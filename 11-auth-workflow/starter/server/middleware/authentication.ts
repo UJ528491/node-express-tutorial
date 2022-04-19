@@ -1,7 +1,7 @@
-const CustomError = require("../errors");
-const { isTokenValid } = require("../utils");
-const Token = require("../models/Token");
-const { attachCookiesToResponse } = require("../utils");
+import CustomError from '../errors';
+import { isTokenValid } from '../utils';
+import Token from '../models/Token';
+import { attachCookiesToResponse } from '../utils';
 
 const authenticateUser = async (req, res, next) => {
   const { refreshToken, accessToken } = req.signedCookies;
@@ -44,7 +44,7 @@ const authorizePermissions = (...roles) => {
   };
 };
 
-module.exports = {
+export default {
   authenticateUser,
   authorizePermissions,
 };

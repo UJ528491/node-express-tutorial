@@ -1,11 +1,7 @@
-const User = require("../models/User");
-const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
-const {
-  createTokenUser,
-  attachCookiesToResponse,
-  checkPermissions,
-} = require("../utils");
+import User from '../models/User';
+import { StatusCodes } from 'http-status-codes';
+import CustomError from '../errors';
+import { createTokenUser, attachCookiesToResponse, checkPermissions } from '../utils';
 
 const getAllUsers = async (req, res) => {
   console.log(req.user);
@@ -59,7 +55,7 @@ const updateUserPassword = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Success! Password Updated." });
 };
 
-module.exports = {
+export default {
   getAllUsers,
   getSingleUser,
   showCurrentUser,

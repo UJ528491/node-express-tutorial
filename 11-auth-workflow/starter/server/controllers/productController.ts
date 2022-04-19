@@ -1,7 +1,7 @@
-const Product = require("../models/Product");
-const { StatusCodes } = require("http-status-codes");
-const CustomError = require("../errors");
-const path = require("path");
+import Product from '../models/Product';
+import { StatusCodes } from 'http-status-codes';
+import CustomError from '../errors';
+import path from 'path';
 
 const createProduct = async (req, res) => {
   req.body.user = req.user.userId;
@@ -76,7 +76,7 @@ const uploadImage = async (req, res) => {
   res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
 
-module.exports = {
+export default {
   createProduct,
   getAllProducts,
   getSingleProduct,
