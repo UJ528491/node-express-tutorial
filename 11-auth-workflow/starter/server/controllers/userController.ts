@@ -1,15 +1,23 @@
-import User from '../models/User';
-import { StatusCodes } from 'http-status-codes';
-import CustomError from '../errors';
-import { createTokenUser, attachCookiesToResponse, checkPermissions } from '../utils';
+import User from "../models/User";
+import { StatusCodes } from "http-status-codes";
+import CustomError from "../errors";
+import {
+  createTokenUser,
+  attachCookiesToResponse,
+  checkPermissions,
+} from "../utils";
+import express from "express";
 
-const getAllUsers = async (req, res) => {
+interface requestUser extends express.Request {
+  user: { userId: string };
+}
+const getAllUsers = async (req: requestUser, res: express.Response) => {
   console.log(req.user);
   const users = await User.find({ role: "user" }).select("-password");
   res.status(StatusCodes.OK).json({ users });
 };
 
-const getSingleUser = async (req, res) => {
+const getSingleUser = async (req: requestUser, res: express.Response) => {
   const user = await User.findOne({ _id: req.params.id }).select("-password");
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${req.params.id}`);
@@ -18,11 +26,11 @@ const getSingleUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user });
 };
 
-const showCurrentUser = async (req, res) => {
+const showCurrentUser = async (req: requestUser, res: express.Response) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 // update user with user.save()
-const updateUser = async (req, res) => {
+const updateUser = async (req: requestUser, res: express.Response) => {
   const { email, name } = req.body;
   if (!email || !name) {
     throw new CustomError.BadRequestError("Please provide all values");
@@ -38,7 +46,7 @@ const updateUser = async (req, res) => {
   attachCookiesToResponse({ res, user: tokenUser });
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
-const updateUserPassword = async (req, res) => {
+const updateUserPassword = async (req: requestUser, res: express.Response) => {
   const { oldPassword, newPassword } = req.body;
   if (!oldPassword || !newPassword) {
     throw new CustomError.BadRequestError("Please provide both values");
@@ -64,7 +72,7 @@ export default {
 };
 
 // update user with findOneAndUpdate
-// const updateUser = async (req, res) => {
+// const updateUser = async (req: requestUser, res: express.Response) => {
 //   const { email, name } = req.body;
 //   if (!email || !name) {
 //     throw new CustomError.BadRequestError('Please provide all values');

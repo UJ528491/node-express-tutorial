@@ -1,15 +1,28 @@
-import Order from '../models/Order';
-import Product from '../models/Product';
-import { StatusCodes } from 'http-status-codes';
-import CustomError from '../errors';
-import { checkPermissions } from '../utils';
+import Order from "../models/Order";
+import Product from "../models/Product";
+import { StatusCodes } from "http-status-codes";
+import CustomError from "../errors";
+import { checkPermissions } from "../utils";
+import express from "express";
 
-const fakeStripeAPI = async ({ amount, currency }) => {
+interface requestOrder extends express.Request {
+  user: { userId: string };
+}
+const fakeStripeAPI = async ({
+  amount,
+  currency,
+}: {
+  amount: any;
+  currency: any;
+}): Promise<{
+  client_secret: string;
+  amount: any;
+}> => {
   const client_secret = "someRandomValue";
   return { client_secret, amount };
 };
 
-const createOrder = async (req, res) => {
+const createOrder = async (req: requestOrder, res: express.Response) => {
   const { items: cartItems, tax, shippingFee } = req.body;
 
   if (!cartItems || cartItems.length < 1) {
@@ -21,7 +34,7 @@ const createOrder = async (req, res) => {
     );
   }
 
-  let orderItems = [];
+  let orderItems: any[] = [];
   let subtotal = 0;
 
   for (const item of cartItems) {
@@ -66,11 +79,11 @@ const createOrder = async (req, res) => {
     .status(StatusCodes.CREATED)
     .json({ order, clientSecret: order.clientSecret });
 };
-const getAllOrders = async (req, res) => {
+const getAllOrders = async (req: requestOrder, res: express.Response) => {
   const orders = await Order.find({});
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
-const getSingleOrder = async (req, res) => {
+const getSingleOrder = async (req: requestOrder, res: express.Response) => {
   const { id: orderId } = req.params;
   const order = await Order.findOne({ _id: orderId });
   if (!order) {
@@ -79,11 +92,14 @@ const getSingleOrder = async (req, res) => {
   checkPermissions(req.user, order.user);
   res.status(StatusCodes.OK).json({ order });
 };
-const getCurrentUserOrders = async (req, res) => {
+const getCurrentUserOrders = async (
+  req: requestOrder,
+  res: express.Response
+) => {
   const orders = await Order.find({ user: req.user.userId });
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
-const updateOrder = async (req, res) => {
+const updateOrder = async (req: requestOrder, res: express.Response) => {
   const { id: orderId } = req.params;
   const { paymentIntentId } = req.body;
 

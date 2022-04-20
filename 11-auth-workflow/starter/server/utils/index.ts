@@ -1,9 +1,9 @@
-import { createJWT, isTokenValid, attachCookiesToResponse } from './jwt';
-import createTokenUser from './createTokenUser';
-import checkPermissions from './checkPermissions';
-import sendVerificationEmail from './sendVerificationEmail';
+import { createJWT, isTokenValid, attachCookiesToResponse } from "./jwt";
+import createTokenUser from "./createTokenUser";
+import checkPermissions from "./checkPermissions";
+import sendVerificationEmail from "./sendVerificationEmail";
 
-export default {
+export {
   createJWT,
   isTokenValid,
   attachCookiesToResponse,

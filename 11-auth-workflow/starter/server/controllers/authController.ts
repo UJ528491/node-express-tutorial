@@ -1,11 +1,20 @@
-import User from '../models/User';
-import { StatusCodes } from 'http-status-codes';
-import CustomError from '../errors';
-import { attachCookiesToResponse, createTokenUser, sendVerificationEmail } from '../utils';
-import crypto from 'crypto';
-import Token from '../models/Token';
+import User from "../models/User";
+import { StatusCodes } from "http-status-codes";
+import CustomError from "../errors";
+import {
+  attachCookiesToResponse,
+  createTokenUser,
+  sendVerificationEmail,
+} from "../utils";
+import crypto from "crypto";
+import Token from "../models/Token";
+import express from "express";
 
-const register = async (req, res) => {
+interface requestUser extends express.Request {
+  user: { userId: string };
+}
+
+const register = async (req: requestUser, res: express.Response) => {
   const { email, name, password } = req.body;
 
   const emailAlreadyExists = await User.findOne({ email });
@@ -52,7 +61,7 @@ const register = async (req, res) => {
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
 
-const verifyEmail = async (req, res) => {
+const verifyEmail = async (req: requestUser, res: express.Response) => {
   const { verificationToken, email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
@@ -70,7 +79,7 @@ const verifyEmail = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Email verified!" });
 };
 
-const login = async (req, res) => {
+const login = async (req: requestUser, res: express.Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -117,7 +126,7 @@ const login = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
-const logout = async (req, res) => {
+const logout = async (req: requestUser, res: express.Response) => {
   await Token.findOneAndDelete({
     user: req.user.userId,
   });

@@ -1,18 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const SingleOrderItemSchema = mongoose.Schema({
+const SingleOrderItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   image: { type: String, required: true },
   price: { type: Number, required: true },
   amount: { type: Number, required: true },
   product: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: "Product",
     required: true,
   },
 });
 
-const OrderSchema = mongoose.Schema(
+const OrderSchema = new mongoose.Schema(
   {
     tax: {
       type: Number,
@@ -37,7 +37,7 @@ const OrderSchema = mongoose.Schema(
       default: "pending",
     },
     user: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "User",
       required: true,
     },

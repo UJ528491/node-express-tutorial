@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const ReviewSchema = mongoose.Schema(
+const ReviewSchema = new mongoose.Schema(
   {
     rating: {
       type: Number,
@@ -19,12 +19,12 @@ const ReviewSchema = mongoose.Schema(
       required: [true, "Please provide review text"],
     },
     user: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "User",
       required: true,
     },
     product: {
-      type: mongoose.Schema.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Product",
       required: true,
     },

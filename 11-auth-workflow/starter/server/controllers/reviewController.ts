@@ -1,10 +1,15 @@
-import Review from '../models/Review';
-import Product from '../models/Product';
-import { StatusCodes } from 'http-status-codes';
-import CustomError from '../errors';
-import { checkPermissions } from '../utils';
+import Review from "../models/Review";
+import Product from "../models/Product";
+import { StatusCodes } from "http-status-codes";
+import CustomError from "../errors";
+import { checkPermissions } from "../utils";
+import express from "express";
 
-const createReview = async (req, res) => {
+interface requestReview extends express.Request {
+  user: { userId: string };
+}
+
+const createReview = async (req: requestReview, res: express.Response) => {
   const { product: productId } = req.body;
 
   const isValidProduct = await Product.findOne({ _id: productId });
@@ -28,7 +33,7 @@ const createReview = async (req, res) => {
   const review = await Review.create(req.body);
   res.status(StatusCodes.CREATED).json({ review });
 };
-const getAllReviews = async (req, res) => {
+const getAllReviews = async (req: requestReview, res: express.Response) => {
   const reviews = await Review.find({}).populate({
     path: "product",
     select: "name company price",
@@ -36,7 +41,7 @@ const getAllReviews = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
-const getSingleReview = async (req, res) => {
+const getSingleReview = async (req: requestReview, res: express.Response) => {
   const { id: reviewId } = req.params;
 
   const review = await Review.findOne({ _id: reviewId });
@@ -47,7 +52,7 @@ const getSingleReview = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ review });
 };
-const updateReview = async (req, res) => {
+const updateReview = async (req: requestReview, res: express.Response) => {
   const { id: reviewId } = req.params;
   const { rating, title, comment } = req.body;
 
@@ -66,7 +71,7 @@ const updateReview = async (req, res) => {
   await review.save();
   res.status(StatusCodes.OK).json({ review });
 };
-const deleteReview = async (req, res) => {
+const deleteReview = async (req: requestReview, res: express.Response) => {
   const { id: reviewId } = req.params;
 
   const review = await Review.findOne({ _id: reviewId });
@@ -80,7 +85,10 @@ const deleteReview = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "Success! Review removed" });
 };
 
-const getSingleProductReviews = async (req, res) => {
+const getSingleProductReviews = async (
+  req: requestReview,
+  res: express.Response
+) => {
   const { id: productId } = req.params;
   const reviews = await Review.find({ product: productId });
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
