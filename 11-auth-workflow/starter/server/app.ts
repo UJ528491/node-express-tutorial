@@ -1,37 +1,37 @@
 require("dotenv").config();
-import 'express-async-errors';
+import "express-async-errors";
 
 // express
-import express from 'express';
+import express from "express";
 
 const app = express();
 
 // rest of the packages
-import morgan from 'morgan';
+import morgan from "morgan";
 
-import cookieParser from 'cookie-parser';
-import fileUpload from 'express-fileupload';
-import rateLimiter from 'express-rate-limit';
-import helmet from 'helmet';
-import xss from 'xss-clean';
-import cors from 'cors';
-import mongoSanitize from 'express-mongo-sanitize';
+import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
+const rateLimiter = require("express-rate-limit");
+import helmet from "helmet";
+const xss = require("xss-clean");
+import cors from "cors";
+import mongoSanitize from "express-mongo-sanitize";
 
 // database
-import connectDB from './db/connect';
+import connectDB from "./db/connect";
 
 //  routers
-import authRouter from './routes/authRoutes';
+import authRouter from "./routes/authRoutes";
 
-import userRouter from './routes/userRoutes';
-import productRouter from './routes/productRoutes';
-import reviewRouter from './routes/reviewRoutes';
-import orderRouter from './routes/orderRoutes';
+import userRouter from "./routes/userRoutes";
+import productRouter from "./routes/productRoutes";
+import reviewRouter from "./routes/reviewRoutes";
+import orderRouter from "./routes/orderRoutes";
 
 // middleware
-import notFoundMiddleware from './middleware/not-found';
+import notFoundMiddleware from "./middleware/not-found";
 
-import errorHandlerMiddleware from './middleware/error-handler';
+import errorHandlerMiddleware from "./middleware/error-handler";
 
 app.set("trust proxy", 1);
 app.use(

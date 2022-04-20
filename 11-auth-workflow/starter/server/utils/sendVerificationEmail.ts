@@ -1,11 +1,11 @@
-import sendEmail from './sendEmail';
+import { sendEmail } from "./sendEmail";
 
 const sendVerificationEmail = async ({
   name,
   email,
   verificationToken,
   origin,
-}) => {
+}: any) => {
   const verifyEmail = `${origin}/user/verify-email?token=${verificationToken}&email=${email}`;
 
   const message = `<p>Please confirm your email by clicking on the following link : <a href=${verifyEmail}>Verify Email</a> </p>`;

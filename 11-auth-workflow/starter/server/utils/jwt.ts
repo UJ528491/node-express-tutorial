@@ -1,15 +1,23 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-const createJWT = ({ payload }) => {
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  });
-  return token;
+const createJWT = ({ payload }: any) => {
+  const secret = process.env.JWT_SECRET;
+  if (secret) {
+    const token = jwt.sign(payload, secret, {
+      expiresIn: process.env.JWT_LIFETIME,
+    });
+    return token;
+  }
 };
 
-const isTokenValid = token => jwt.verify(token, process.env.JWT_SECRET);
+const isTokenValid = (token: any) => {
+  const secret = process.env.JWT_SECRET;
+  if (secret) {
+    jwt.verify(token, secret);
+  }
+};
 
-const attachCookiesToResponse = ({ res, user, refreshToken }) => {
+const attachCookiesToResponse = ({ res, user, refreshToken }: any) => {
   const accessTokenJWT = createJWT({ payload: { user } });
   const refreshTokenJWT = createJWT({ payload: { user, refreshToken } });
 
@@ -44,8 +52,4 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
 //   });
 // };
 
-export default {
-  createJWT,
-  isTokenValid,
-  attachCookiesToResponse,
-};
+export { createJWT, isTokenValid, attachCookiesToResponse };

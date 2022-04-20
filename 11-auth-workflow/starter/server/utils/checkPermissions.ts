@@ -1,6 +1,6 @@
-import CustomError from '../errors';
+import CustomError from "../errors";
 
-const chechPermissions = (requestUser, resourceUserId) => {
+const checkPermissions = (requestUser: any, resourceUserId: any) => {
   // console.log(requestUser);
   // console.log(resourceUserId);
   // console.log(typeof resourceUserId);
@@ -11,4 +11,4 @@ const chechPermissions = (requestUser, resourceUserId) => {
   );
 };
 
-export default chechPermissions;
+export default checkPermissions;

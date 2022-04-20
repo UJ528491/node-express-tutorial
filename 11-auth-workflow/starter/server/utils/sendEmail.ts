@@ -1,7 +1,8 @@
-import nodemailer from 'nodemailer';
-import nodemailerConfig from './nodemailerConfig';
+// import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
+import nodemailerConfig from "./nodemailerConfig";
 
-const sendEmail = async ({ to, subject, html }) => {
+const sendEmail = async ({ to, subject, html }: any) => {
   let testAccount = await nodemailer.createTestAccount();
   const transporter = nodemailer.createTransport(nodemailerConfig);
 
@@ -13,4 +14,4 @@ const sendEmail = async ({ to, subject, html }) => {
   });
 };
 
-export default sendEmail;
+export { sendEmail };
