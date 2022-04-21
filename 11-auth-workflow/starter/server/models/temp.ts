@@ -3,6 +3,10 @@
  * https://mongodb.github.io/node-mongodb-native
  */
 
+const MongoClient = require("mongodb").MongoClient;
+const assert = require("assert");
+const { ObjectId } = require("mongodb");
+
 const agg = [
   {
     $match: {
@@ -25,10 +29,10 @@ const agg = [
 MongoClient.connect(
   "",
   { useNewUrlParser: true, useUnifiedTopology: true },
-  function (connectErr, client) {
+  function (connectErr: any, client: any) {
     assert.equal(null, connectErr);
     const coll = client.db("").collection("");
-    coll.aggregate(agg, (cmdErr, result) => {
+    coll.aggregate(agg, (cmdErr: any, result: any) => {
       assert.equal(null, cmdErr);
     });
     client.close();
