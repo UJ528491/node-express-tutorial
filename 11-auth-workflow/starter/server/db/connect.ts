@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-const connectDB = (url: string) => {
+const connectDB = (url: any) => {
   return mongoose.connect(url);
 };
 
-export default mongoose;
+export default connectDB;
