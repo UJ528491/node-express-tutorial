@@ -10,11 +10,7 @@ import crypto from "crypto";
 import Token from "../models/Token";
 import express from "express";
 
-interface requestUser extends express.Request {
-  user: { userId: string };
-}
-
-const register = async (req: requestUser, res: express.Response) => {
+const register = async (req: express.Request, res: express.Response) => {
   const { email, name, password } = req.body;
 
   const emailAlreadyExists = await User.findOne({ email });
@@ -61,7 +57,7 @@ const register = async (req: requestUser, res: express.Response) => {
   // res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
 
-const verifyEmail = async (req: requestUser, res: express.Response) => {
+const verifyEmail = async (req: express.Request, res: express.Response) => {
   const { verificationToken, email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
@@ -79,7 +75,7 @@ const verifyEmail = async (req: requestUser, res: express.Response) => {
   res.status(StatusCodes.OK).json({ msg: "Email verified!" });
 };
 
-const login = async (req: requestUser, res: express.Response) => {
+const login = async (req: express.Request, res: express.Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -126,10 +122,12 @@ const login = async (req: requestUser, res: express.Response) => {
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
-const logout = async (req: requestUser, res: express.Response) => {
-  await Token.findOneAndDelete({
-    user: req.user.userId,
-  });
+const logout = async (req: express.Request, res: express.Response) => {
+  if (req.user) {
+    await Token.findOneAndDelete({
+      user: req.user.userId,
+    });
+  }
   res.cookie("accessToken", "logout", {
     httpOnly: true,
     expires: new Date(Date.now()),
@@ -141,9 +139,4 @@ const logout = async (req: requestUser, res: express.Response) => {
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
 
-export default {
-  register,
-  login,
-  logout,
-  verifyEmail,
-};
+export { register, login, logout, verifyEmail };

@@ -51,7 +51,4 @@ const authorizePermissions = (...roles: string[]) => {
   };
 };
 
-export default {
-  authenticateUser,
-  authorizePermissions,
-};
+export { authenticateUser, authorizePermissions };

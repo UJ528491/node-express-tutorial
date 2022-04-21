@@ -8,16 +8,13 @@ import {
 } from "../utils";
 import express from "express";
 
-interface requestUser extends express.Request {
-  user: { userId: string };
-}
-const getAllUsers = async (req: requestUser, res: express.Response) => {
+const getAllUsers = async (req: express.Request, res: express.Response) => {
   console.log(req.user);
   const users = await User.find({ role: "user" }).select("-password");
   res.status(StatusCodes.OK).json({ users });
 };
 
-const getSingleUser = async (req: requestUser, res: express.Response) => {
+const getSingleUser = async (req: express.Request, res: express.Response) => {
   const user = await User.findOne({ _id: req.params.id }).select("-password");
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${req.params.id}`);
@@ -26,44 +23,51 @@ const getSingleUser = async (req: requestUser, res: express.Response) => {
   res.status(StatusCodes.OK).json({ user });
 };
 
-const showCurrentUser = async (req: requestUser, res: express.Response) => {
+const showCurrentUser = async (req: express.Request, res: express.Response) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 // update user with user.save()
-const updateUser = async (req: requestUser, res: express.Response) => {
+const updateUser = async (req: express.Request, res: express.Response) => {
   const { email, name } = req.body;
   if (!email || !name) {
     throw new CustomError.BadRequestError("Please provide all values");
   }
-  const user = await User.findOne({ _id: req.user.userId });
+  if (req.user) {
+    const user = await User.findOne({ _id: req.user.userId });
 
-  user.email = email;
-  user.name = name;
+    user.email = email;
+    user.name = name;
 
-  await user.save();
+    await user.save();
 
-  const tokenUser = createTokenUser(user);
-  attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+    const tokenUser = createTokenUser(user);
+    attachCookiesToResponse({ res, user: tokenUser });
+    res.status(StatusCodes.OK).json({ user: tokenUser });
+  }
 };
-const updateUserPassword = async (req: requestUser, res: express.Response) => {
+const updateUserPassword = async (
+  req: express.Request,
+  res: express.Response
+) => {
   const { oldPassword, newPassword } = req.body;
   if (!oldPassword || !newPassword) {
     throw new CustomError.BadRequestError("Please provide both values");
   }
-  const user = await User.findOne({ _id: req.user.userId });
+  if (req.user) {
+    const user = await User.findOne({ _id: req.user.userId });
 
-  const isPasswordCorrect = await user.comparePassword(oldPassword);
-  if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    const isPasswordCorrect = await user.comparePassword(oldPassword);
+    if (!isPasswordCorrect) {
+      throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    }
+    user.password = newPassword;
+
+    await user.save();
+    res.status(StatusCodes.OK).json({ msg: "Success! Password Updated." });
   }
-  user.password = newPassword;
-
-  await user.save();
-  res.status(StatusCodes.OK).json({ msg: "Success! Password Updated." });
 };
 
-export default {
+export {
   getAllUsers,
   getSingleUser,
   showCurrentUser,
@@ -72,7 +76,7 @@ export default {
 };
 
 // update user with findOneAndUpdate
-// const updateUser = async (req: requestUser, res: express.Response) => {
+// const updateUser = async (req: express.Request, res: express.Response) => {
 //   const { email, name } = req.body;
 //   if (!email || !name) {
 //     throw new CustomError.BadRequestError('Please provide all values');

@@ -5,9 +5,6 @@ import CustomError from "../errors";
 import { checkPermissions } from "../utils";
 import express from "express";
 
-interface requestOrder extends express.Request {
-  user: { userId: string };
-}
 const fakeStripeAPI = async ({
   amount,
   currency,
@@ -22,7 +19,7 @@ const fakeStripeAPI = async ({
   return { client_secret, amount };
 };
 
-const createOrder = async (req: requestOrder, res: express.Response) => {
+const createOrder = async (req: express.Request, res: express.Response) => {
   const { items: cartItems, tax, shippingFee } = req.body;
 
   if (!cartItems || cartItems.length < 1) {
@@ -65,25 +62,27 @@ const createOrder = async (req: requestOrder, res: express.Response) => {
     currency: "usd",
   });
 
-  const order = await Order.create({
-    orderItems,
-    total,
-    subtotal,
-    tax,
-    shippingFee,
-    clientSecret: paymentIntent.client_secret,
-    user: req.user.userId,
-  });
+  if (req.user) {
+    const order = await Order.create({
+      orderItems,
+      total,
+      subtotal,
+      tax,
+      shippingFee,
+      clientSecret: paymentIntent.client_secret,
+      user: req.user.userId,
+    });
 
-  res
-    .status(StatusCodes.CREATED)
-    .json({ order, clientSecret: order.clientSecret });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ order, clientSecret: order.clientSecret });
+  }
 };
-const getAllOrders = async (req: requestOrder, res: express.Response) => {
+const getAllOrders = async (req: express.Request, res: express.Response) => {
   const orders = await Order.find({});
   res.status(StatusCodes.OK).json({ orders, count: orders.length });
 };
-const getSingleOrder = async (req: requestOrder, res: express.Response) => {
+const getSingleOrder = async (req: express.Request, res: express.Response) => {
   const { id: orderId } = req.params;
   const order = await Order.findOne({ _id: orderId });
   if (!order) {
@@ -93,13 +92,15 @@ const getSingleOrder = async (req: requestOrder, res: express.Response) => {
   res.status(StatusCodes.OK).json({ order });
 };
 const getCurrentUserOrders = async (
-  req: requestOrder,
+  req: express.Request,
   res: express.Response
 ) => {
-  const orders = await Order.find({ user: req.user.userId });
-  res.status(StatusCodes.OK).json({ orders, count: orders.length });
+  if (req.user) {
+    const orders = await Order.find({ user: req.user.userId });
+    res.status(StatusCodes.OK).json({ orders, count: orders.length });
+  }
 };
-const updateOrder = async (req: requestOrder, res: express.Response) => {
+const updateOrder = async (req: express.Request, res: express.Response) => {
   const { id: orderId } = req.params;
   const { paymentIntentId } = req.body;
 
@@ -116,7 +117,7 @@ const updateOrder = async (req: requestOrder, res: express.Response) => {
   res.status(StatusCodes.OK).json({ order });
 };
 
-export default {
+export {
   getAllOrders,
   getSingleOrder,
   getCurrentUserOrders,

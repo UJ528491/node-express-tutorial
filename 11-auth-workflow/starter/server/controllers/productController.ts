@@ -3,22 +3,28 @@ import { StatusCodes } from "http-status-codes";
 import CustomError from "../errors";
 import path from "path";
 import express from "express";
+import fileUpload from "express-fileupload";
 
-interface requestProduct extends express.Request {
-  user: { userId: string };
-  files: { image: any };
-}
-const createProduct = async (req: requestProduct, res: express.Response) => {
-  req.body.user = req.user.userId;
-  const product = await Product.create(req.body);
-  res.status(StatusCodes.CREATED).json({ product });
+// interface requestProduct extends express.Request {
+//   user: { userId: string };
+//   files: { image: any };
+// }
+const createProduct = async (req: express.Request, res: express.Response) => {
+  if (req.user) {
+    req.body.user = req.user.userId;
+    const product = await Product.create(req.body);
+    res.status(StatusCodes.CREATED).json({ product });
+  }
 };
-const getAllProducts = async (req: requestProduct, res: express.Response) => {
+const getAllProducts = async (req: express.Request, res: express.Response) => {
   const products = await Product.find({});
 
   res.status(StatusCodes.OK).json({ products, count: products.length });
 };
-const getSingleProduct = async (req: requestProduct, res: express.Response) => {
+const getSingleProduct = async (
+  req: express.Request,
+  res: express.Response
+) => {
   const { id: productId } = req.params;
 
   const product = await Product.findOne({ _id: productId }).populate("reviews");
@@ -29,7 +35,7 @@ const getSingleProduct = async (req: requestProduct, res: express.Response) => {
 
   res.status(StatusCodes.OK).json({ product });
 };
-const updateProduct = async (req: requestProduct, res: express.Response) => {
+const updateProduct = async (req: express.Request, res: express.Response) => {
   const { id: productId } = req.params;
 
   const product = await Product.findOneAndUpdate({ _id: productId }, req.body, {
@@ -43,7 +49,7 @@ const updateProduct = async (req: requestProduct, res: express.Response) => {
 
   res.status(StatusCodes.OK).json({ product });
 };
-const deleteProduct = async (req: requestProduct, res: express.Response) => {
+const deleteProduct = async (req: express.Request, res: express.Response) => {
   const { id: productId } = req.params;
 
   const product = await Product.findOne({ _id: productId });
@@ -55,33 +61,34 @@ const deleteProduct = async (req: requestProduct, res: express.Response) => {
   await product.remove();
   res.status(StatusCodes.OK).json({ msg: "Success! Product removed." });
 };
-const uploadImage = async (req: requestProduct, res: express.Response) => {
+const uploadImage = async (req: express.Request, res: express.Response) => {
   if (!req.files) {
     throw new CustomError.BadRequestError("No File Uploaded");
   }
   const productImage = req.files.image;
+  if (!Array.isArray(productImage)) {
+    if (!productImage.mimetype.startsWith("image")) {
+      throw new CustomError.BadRequestError("Please Upload Image");
+    }
 
-  if (!productImage.mimetype.startsWith("image")) {
-    throw new CustomError.BadRequestError("Please Upload Image");
-  }
+    const maxSize = 1024 * 1024;
 
-  const maxSize = 1024 * 1024;
+    if (productImage.size > maxSize) {
+      throw new CustomError.BadRequestError(
+        "Please upload image smaller than 1MB"
+      );
+    }
 
-  if (productImage.size > maxSize) {
-    throw new CustomError.BadRequestError(
-      "Please upload image smaller than 1MB"
+    const imagePath = path.join(
+      __dirname,
+      "../public/uploads/" + `${productImage.name}`
     );
+    await productImage.mv(imagePath);
+    res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
   }
-
-  const imagePath = path.join(
-    __dirname,
-    "../public/uploads/" + `${productImage.name}`
-  );
-  await productImage.mv(imagePath);
-  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
 
-export default {
+export {
   createProduct,
   getAllProducts,
   getSingleProduct,
