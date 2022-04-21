@@ -1,5 +1,12 @@
-import { StatusCodes } from 'http-status-codes';
-const errorHandlerMiddleware = (err, req, res, next) => {
+import { StatusCodes } from "http-status-codes";
+import express from "express";
+
+const errorHandlerMiddleware = (
+  err: any,
+  req: any,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   console.log(err);
   let customError = {
     // set default
@@ -8,7 +15,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   };
   if (err.name === "ValidationError") {
     customError.msg = Object.values(err.errors)
-      .map(item => item.message)
+      .map((item: any) => item.message)
       .join(",");
     customError.statusCode = 400;
   }

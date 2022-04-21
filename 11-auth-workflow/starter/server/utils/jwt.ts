@@ -13,7 +13,7 @@ const createJWT = ({ payload }: any) => {
 const isTokenValid = (token: any) => {
   const secret = process.env.JWT_SECRET;
   if (secret) {
-    jwt.verify(token, secret);
+    return jwt.verify(token, secret);
   }
 };
 

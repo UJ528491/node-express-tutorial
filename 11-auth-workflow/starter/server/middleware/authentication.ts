@@ -1,18 +1,25 @@
-import CustomError from '../errors';
-import { isTokenValid } from '../utils';
-import Token from '../models/Token';
-import { attachCookiesToResponse } from '../utils';
+import CustomError from "../errors";
+import { isTokenValid } from "../utils";
+import Token from "../models/Token";
+import { attachCookiesToResponse } from "../utils";
+import express from "express";
 
-const authenticateUser = async (req, res, next) => {
+const authenticateUser = async (
+  req: any,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   const { refreshToken, accessToken } = req.signedCookies;
 
   try {
     if (accessToken) {
-      const payload = isTokenValid(accessToken);
-      req.user = payload.user;
+      const payload: any = isTokenValid(accessToken);
+      if (payload) {
+        req.user = payload.user;
+      }
       return next();
     }
-    const payload = isTokenValid(refreshToken);
+    const payload: any = isTokenValid(refreshToken);
     const existingToken = await Token.findOne({
       user: payload.user.userId,
       refreshToken: payload.refreshToken,
@@ -33,8 +40,8 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-const authorizePermissions = (...roles) => {
-  return (req, res, next) => {
+const authorizePermissions = (...roles: string[]) => {
+  return (req: any, res: express.Response, next: express.NextFunction) => {
     if (!roles.includes(req.user.role)) {
       throw new CustomError.UnauthorizedError(
         "Unauthorized to access this route"
