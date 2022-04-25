@@ -32,7 +32,7 @@ const register = async (req: express.Request, res: express.Response) => {
     verificationToken,
   });
 
-  const origin = "http://localhost:5000";
+  const origin = "http://localhost:3000";
 
   // const tempOrigin = req.get('origin')
   // const protocol = req.protocol
@@ -115,11 +115,11 @@ const login = async (req: express.Request, res: express.Response) => {
   const ip = req.ip;
   const userToken = { refreshToken, ip, userAgent, user: user._id };
 
-  await Token.create(userToken);
+  const token = await Token.create(userToken);
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken });
 
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+  res.status(StatusCodes.OK).json({ user: tokenUser, token });
 };
 
 const logout = async (req: express.Request, res: express.Response) => {

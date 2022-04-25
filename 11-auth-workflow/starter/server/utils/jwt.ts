@@ -3,9 +3,7 @@ import jwt from "jsonwebtoken";
 const createJWT = ({ payload }: any) => {
   const secret = process.env.JWT_SECRET;
   if (secret) {
-    const token = jwt.sign(payload, secret, {
-      expiresIn: process.env.JWT_LIFETIME,
-    });
+    const token = jwt.sign(payload, secret);
     return token;
   }
 };

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const TokenSchema = new mongoose.Schema(
   {
@@ -6,7 +6,7 @@ const TokenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    id: {
+    ip: {
       type: String,
       required: true,
     },
