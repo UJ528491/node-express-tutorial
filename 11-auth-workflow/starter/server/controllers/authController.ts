@@ -67,7 +67,7 @@ const verifyEmail = async (req: express.Request, res: express.Response) => {
     throw new CustomError.BadRequestError("Invalid verification token");
   }
   user.isVerified = true;
-  user.verivied = Date.now();
+  user.verified = Date.now();
   user.verificationToken = "";
 
   await user.save();
