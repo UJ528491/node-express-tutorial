@@ -19,7 +19,10 @@ const authenticateUser = async (
         return next();
       }
     }
+    console.log("1");
+
     const payload: any = isTokenValid(refreshToken);
+    console.log("2");
     const existingToken = await Token.findOne({
       user: payload.user.userId,
       refreshToken: payload.refreshToken,
@@ -28,11 +31,13 @@ const authenticateUser = async (
     if (!existingToken || !existingToken?.isValid) {
       throw new CustomError.UnauthenticatedError("Invalid token");
     }
+    console.log("3");
     attachCookiesToResponse({
       res,
       user: payload.user,
       refreshToken: existingToken.refreshToken,
     });
+    console.log("4");
     req.user = payload.user;
     return next();
   } catch (error) {

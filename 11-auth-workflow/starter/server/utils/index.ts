@@ -2,6 +2,7 @@ import { createJWT, isTokenValid, attachCookiesToResponse } from "./jwt";
 import createTokenUser from "./createTokenUser";
 import checkPermissions from "./checkPermissions";
 import sendVerificationEmail from "./sendVerificationEmail";
+import sendResetPasswordEmail from "./sendResetPasswordEmail";
 
 export {
   createJWT,
@@ -10,4 +11,5 @@ export {
   createTokenUser,
   checkPermissions,
   sendVerificationEmail,
+  sendResetPasswordEmail,
 };
