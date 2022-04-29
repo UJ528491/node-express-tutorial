@@ -6,6 +6,7 @@ import {
   createTokenUser,
   sendVerificationEmail,
   sendResetPasswordEmail,
+  createHash,
 } from "../utils";
 import crypto from "crypto";
 import Token from "../models/Token";
@@ -159,7 +160,7 @@ const forgotPassword = async (req: express.Request, res: express.Response) => {
 
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
-    user.passwordToken = passwordToken;
+    user.passwordToken = createHash(passwordToken);
     user.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await user.save();
   }
@@ -168,7 +169,24 @@ const forgotPassword = async (req: express.Request, res: express.Response) => {
     .json({ msg: "Please check your email for reset password link" });
 };
 const resetPassword = async (req: express.Request, res: express.Response) => {
-  res.send("reset password");
+  const { token, email, password } = req.body;
+  if (!token || !email || !password) {
+    throw new CustomError.BadRequestError("Please provide all values");
+  }
+  const user = await User.findOne({ email });
+  if (user) {
+    const currentDate = new Date();
+    if (
+      user.passwordToken === createHash(token) &&
+      user.passwordTokenExpirationDate > currentDate
+    ) {
+      user.password = password;
+      user.passwordToken = null;
+      user.passwordTokenExpirationDate = null;
+      await user.save();
+    }
+  }
+  res.status(StatusCodes.OK).json({ msg: "Password reset successfully" });
 };
 
 export { register, login, logout, verifyEmail, forgotPassword, resetPassword };

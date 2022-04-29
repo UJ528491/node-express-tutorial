@@ -3,6 +3,7 @@ import createTokenUser from "./createTokenUser";
 import checkPermissions from "./checkPermissions";
 import sendVerificationEmail from "./sendVerificationEmail";
 import sendResetPasswordEmail from "./sendResetPasswordEmail";
+import createHash from "./createHash";
 
 export {
   createJWT,
@@ -12,4 +13,5 @@ export {
   checkPermissions,
   sendVerificationEmail,
   sendResetPasswordEmail,
+  createHash,
 };
